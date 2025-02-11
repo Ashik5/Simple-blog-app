@@ -32,15 +32,21 @@ router.post("/createBlog", async (req, res) => {
 
 router.get("/getBlogs", async (req, res) => {
     try {
-        const blogs = await Blog.find()
+        const blogs = await Blog.find({ isApproved: true });
         res.json({ success: true, blogs })
     } catch (error) {
         console.error(error.message)
         res.status(500).json({ success: false, message: "Internal Server Error" })
     }
-})
-
-
-
+});
+router.get("/getAdminBlogs", async (req, res) => {
+    try {
+        const blogs = await Blog.find();
+        res.json({ success: true, blogs })
+    } catch (error) {
+        console.error(error.message)
+        res.status(500).json({ success: false, message: "Internal Server Error" })
+    }
+});
 
 module.exports = router

@@ -1,32 +1,39 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: GPL-3.0
 
+pragma solidity >=0.7.0 <0.9.0;
 
-contract Blog {
-    struct BlogPost {
-        uint id;
-        string title;
-        string contentHash;
-        address author; 
+contract BlogModel {
+    struct Blog {
+        string blogId;
+        string authorName;
+        bool isApproved;
+        bool isDeleted;
     }
 
-    BlogPost[] public posts;
-    uint public postCount = 0;
+    mapping(string => Blog) public blogs; 
+    uint public nextBlogId; 
 
-    event BlogCreated(uint id, string title, string contentHash, address author);
+    address public admin;
 
-    function createPost(string memory title, string memory contentHash) public {
-        postCount++;
-        posts.push(BlogPost(postCount, title, contentHash, msg.sender));
-        emit BlogCreated(postCount, title, contentHash, msg.sender);
+    constructor() {
+        admin = msg.sender;
     }
 
-    function getPost(uint id) public view returns (BlogPost memory) {
-        require(id > 0 && id <= postCount, "Invalid post ID");
-        return posts[id - 1];
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "You are not the admin");
+        _;
     }
 
-    function getAllPosts() public view returns (BlogPost[] memory) {
-        return posts;
+
+    function approveBlog(string memory _blogId) public onlyAdmin {
+        
+        blogs[_blogId].isApproved = true;
     }
+
+    function deleteBlog(string memory _blogId) public onlyAdmin {
+        
+        blogs[_blogId].isDeleted = true;
+    }
+
+    
 }

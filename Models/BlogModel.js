@@ -8,6 +8,7 @@ const BlogSchema = new Schema({
     description: { type: String, required: true },
     // contentHash: { type: String, required: true }, 
     createdAt: { type: Date, default: Date.now },
+    isApproved:{type:Boolean,default:false},
 })
 
 module.exports = mongoose.model('blogs', BlogSchema)
